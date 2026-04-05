@@ -17,7 +17,7 @@ const App = () => {
         <ScheduleGrid />
       </main>
       <footer className="app-footer">
-        <p>© {new Date().getFullYear()} My Schedule App. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} My Schedule App</p>
       </footer>
     </div>
   );

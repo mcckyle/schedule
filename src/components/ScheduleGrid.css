@@ -1,113 +1,65 @@
 /* Filename: ScheduleGrid.css */
+
+/* ScheduleGrid Layout Styles. */
 .schedule-grid {
   display: flex;
   flex-direction: column; /* Stack the schedule container vertically */
-  align-items: center;    /* Center-align elements horizontally */
-  margin: 20px;           /* Add space around the grid */
+  gap: 2rem;
 }
 
 .schedule-container {
-  display: flex;           /* Keep the schedule columns in a row */
-  justify-content: center; /* Center the columns */
-  gap: 10px;               /* Space between columns */
-  flex-wrap: wrap;         /* Allow wrapping for small screens */
-  margin-top: 20px;        /* Add space above the schedule */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
 }
-
-.task-content {
-  font-size: 0.9em;        /* Smaller font for task content */
-  color: #555;            /* Softer color for task text */
-  text-align: center;     /* Center align task description */
-}
-
-.task-description {
-  font-style: italic;      /* Italicize tasks for emphasis */
-  color: #333;             /* Make task text slightly darker */
-}
-
-.no-task {
-  color: #aaa;             /* Lighter color for empty slots */
-  font-style: italic;      /* Keep consistent style for placeholder text */
-}
-
 
 .day-column {
-  flex: 1 1 200px;          /* Make the columns responsive, minimum width of 200px */
-  margin: 0 10px;           /* Spacing between columns */
-  padding: 10px;            /* Inner padding */
-  background: #f9f9f9;      /* Light background for each day */
-  border-radius: 8px;       /* Rounded corners for modern look */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.day-column h3 {
-  text-align: center;
-  background: #007bff;
-  color: #fff;
-  padding: 10px 0;
-  margin: 0;
-  font-size: 1.2rem;        /* Slightly larger font for day header */
-  font-weight: bold;
-  border-radius: 5px;       /* Rounded corners for header */
+.day-header {
+	font-size: 0.95rem;
+	font-weight: 600;
+	text-align: center;
+	color: var(--color-muted);
 }
 
 .hour-slot {
-  background-color: #fff;         /* White background for slots */
-  border: 1px solid #ddd;         /* Subtle border for separation */
-  border-radius: 8px;             /* Rounded corners for slots */
-  padding: 15px;                  /* Inner spacing for content */
-  margin-bottom: 15px;            /* Space between slots */
-  cursor: pointer;               /* Pointer on hover */
-  transition: all 0.3s ease;      /* Smooth transition for hover effects */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Soft shadow on slots */
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  text-align: left;
+  
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.6rem;
+  
+  transition: var(--transition);
 }
-
-.hour-slot:hover {
-  background-color: #e0f7fa; /* Highlight on hover */
-}
+.hour-slot:hover { border-color: var(--color-primary); background: #eff6ff; }
 
 .hour-header {
-  font-size: 1.1em;
-  font-weight: bold;
-  margin-bottom: 8px;             /* Slightly larger font for the space below the time */
-  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-muted);
 }
-
-.clear-tasks-button {
-  padding: 8px 15px;
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.clear-tasks-button:hover {
-  background-color: #ff1a1a;
-}
-
-label {
-  font-weight: bold;
-}
-
-input[type="file"] {
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-}
-
-input[type="file"]:focus {
-  border-color: #007bff;
-  outline: none;
-}
-
+.task-content { font-size: 0.85rem; }
+.task-description { color: var(--color-text); }
+.no-task { color: var(--color-muted); opacity: 0.7; }
 .controls {
-  margin-top: 30px;              /* Adds spacing between the schedule grid and controls */
-  text-align: center;            /* Centers the controls horizontally */
-  font-size: 1rem;               /* Set a consistent font size */
   display: flex;                 /* Flex container for better alignment */
   justify-content: center;       /* Center the controls */
-  gap: 20px;                     /* Space between controls */
+  gap: 1rem;
+  flex-wrap: wrap;
 }
+
+input[type="file"] { font-size: 0.85rem; }
+.controls button { background: #ef4444; }
+.controls button:hover { background: #dc2626; }

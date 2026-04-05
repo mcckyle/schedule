@@ -1,4 +1,4 @@
-//Date: 4 April 2026
+//Date: 5 April 2026
 //Name: Kyle McColgan
 //Filename: ScheduleGrid.jsx
 //Description: This file contains the React parent grid component for the weekly schedule project.
@@ -27,11 +27,9 @@ const ScheduleGrid = () => {
     }
   });
   
-  // Load tasks from localStorage when component mounts.
+  //Load default schedule ONLY if no saved data exists.
   useEffect(() => {
-	  try
-	  {
-		if (Object.keys(tasks).length === 0)
+	    if (Object.keys(tasks).length === 0)
         {
 		  setTasks(dailySchedule); // Set the tasks in state
           console.log("Loaded tasks from schedule.json:", dailySchedule);
@@ -40,20 +38,12 @@ const ScheduleGrid = () => {
         {
           console.error('Failed to fetch schedule.json');
         }
-      }
-      catch (error)
-      {
-        console.error("Error loading tasks:", error);
-      }
   }, []);
-
-
+  
   useEffect(() => {
     console.log('Updated tasks state:', tasks);  // Check the updated tasks.
   }, [tasks]);
-
-
-
+  
   // Save tasks to localStorage on update.
   useEffect(() => {
     console.log('Saving tasks to localStorage:', tasks);
@@ -77,66 +67,35 @@ const ScheduleGrid = () => {
     const formattedHour = hour % 12 || 12;
     return `${formattedHour} ${isPM ? 'PM' : 'AM'}`;
   };
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file)
-    {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target.result;
-        parseTasksFromJSON(content);
-      };
-      reader.readAsText(file);
-    }
-  };
-
-const parseTasksFromJSON = (content) => {
-  try
-  {
-    const parsedTasks = JSON.parse(content);
-    if (typeof parsedTasks === 'object' && parsedTasks !== null)
-    {
-      const mergedTasks = { ...tasks, ...parsedTasks }; // Merge new tasks with existing tasks.
-      setTasks(mergedTasks); // Update state.
-      localStorage.setItem('scheduleTasks', JSON.stringify(mergedTasks)); // Persist to localStorage.
-    }
-    else
-    {
-      console.error('Invalid JSON format for tasks.');
-    }
-  }
-  catch (error)
-  {
-    console.error('Failed to parse JSON:', error);
-  }
-};
-
+  
   return (
     <div className="schedule-grid" data-testid="schedule-grid">
       <div className="schedule-container">
         {days.map((day) => (
-          <div className="day-column" key={day}>
-            <h3>{day}</h3>
-            {hours.map((hour) => (
-              <div
-                className="hour-slot"
-                key={`${day}-${hour}`}
-                onClick={() => handleSlotClick(day, hour)}
-              >
-                <div className="hour-header">
-                  <strong>{formatHour(hour)}</strong>
+          <section className="day-column" key={day}>
+            <h3 className="day-header">{day}</h3>
+            {hours.map((hour) => {
+			  const key = `${day}-${hour}`;
+			  const task = tasks[key];
+			  
+			  return (
+			    <button
+				  key={key}
+				  className="hour-slot"
+				  onClick={() => handleSlotClick(day, hour)}
+				>
+                  <div className="hour-header">{formatHour(hour)}</div>
+                  <div className="task-content">
+                    {task ? (
+                      <span className="task-description">{task}</span>
+                    ) : (
+                      <span className="no-task">No activity</span>
+                    )}
                 </div>
-                <div className="task-content">
-                  {tasks && tasks[`${day}-${hour}`] ? (
-                    <p className="task-description">{tasks[`${day}-${hour}`]}</p>
-                  ) : (
-                    <p className="no-task">No activity scheduled</p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+              </button>
+              );
+			})}
+          </section>
         ))}
       </div>
       {selectedSlot && (
@@ -147,21 +106,37 @@ const parseTasksFromJSON = (content) => {
         />
       )}
       <div className="controls">
-        <label htmlFor="file-upload">Upload Tasks (JSON): </label>
         <input
           type="file"
-          id="file-upload"
-          accept=".json"
-          onChange={handleFileUpload}
+		  accept=".json"
+		  onChange={(e) => {
+		    const file = e.target.files[0];
+			if (!file)
+			{
+			  return;
+			}
+			const reader = new FileReader();
+			reader.onload = (event) => {
+			  try
+			  {
+			    const parsed = JSON.parse(event.target.result);
+				setTasks((prev) => ({ ...prev, ...parsed }));
+			  }
+			  catch
+			  {
+				  console.error('Invalid JSON file');
+			  }
+			};
+			reader.readAsText(file);
+		  }}
         />
         <button
           onClick={() => {
             setTasks({});
             localStorage.removeItem('scheduleTasks');
           }}
-          className="clear-tasks-button"
         >
-          Clear All Tasks
+          Clear
         </button>
       </div>
     </div>

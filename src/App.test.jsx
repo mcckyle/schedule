@@ -1,4 +1,4 @@
-//Date: 4 April 2026
+//Date: 5 April 2026
 //Name: Kyle McColgan
 //Filename: App.test.js
 //Description: This file contains the main entry component tests for the weekly schedule project.
@@ -21,6 +21,6 @@ test('renders the schedule grid component', () => {
 test('renders the footer with the correct year', () => {
   render(<App />);
   const year = new Date().getFullYear();
-  const footerElement = screen.getByText(`© ${year} My Schedule App. All rights reserved.`);
+  const footerElement = screen.getByText(`© ${year} My Schedule App`);
   expect(footerElement).toBeInTheDocument();
 });
