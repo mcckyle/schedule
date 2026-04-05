@@ -1,7 +1,7 @@
-//Date: 14 February 2025
+//Date: 4 April 2026
 //Name: Kyle McColgan
 //Filename: App.test.js
-//Description: Contains the main entry component tests for the weekly schedule project.
+//Description: This file contains the main entry component tests for the weekly schedule project.
 
 import { render, screen } from '@testing-library/react';
 import App from './App';

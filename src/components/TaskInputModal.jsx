@@ -1,7 +1,7 @@
-//Date: 14 February 2025
+//Date: 4 April 2026
 //Name: Kyle McColgan
-//Filename: TaskInputModal.js
-//Description: Contains the React task data entry component for the weekly schedule project.
+//Filename: TaskInputModal.jsx
+//Description: This file contains the React task data entry component for the weekly schedule project.
 
 import React, { useState } from 'react';
 

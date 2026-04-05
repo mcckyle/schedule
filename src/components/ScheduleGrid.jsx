@@ -1,10 +1,11 @@
-//Date: 17 February 2025
+//Date: 4 April 2026
 //Name: Kyle McColgan
-//Filename: ScheduleGrid.js
-//Description: Contains the React parent grid component for the weekly schedule project.
+//Filename: ScheduleGrid.jsx
+//Description: This file contains the React parent grid component for the weekly schedule project.
 
 import React, { useState, useEffect } from 'react';
 import TaskInputModal from './TaskInputModal';
+import dailySchedule from "../data/schedule.json";
 import './ScheduleGrid.css';
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -25,18 +26,15 @@ const ScheduleGrid = () => {
       return {};
     }
   });
-
-
+  
   // Load tasks from localStorage when component mounts.
   useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        const response = await fetch(`${process.env.PUBLIC_URL}/data/schedule.json`);
-        if (response.ok)
+	  try
+	  {
+		if (Object.keys(tasks).length === 0)
         {
-          const data = await response.json();
-          setTasks(data); // Set the tasks in state
-          console.log("Loaded tasks from schedule.json:", data);
+		  setTasks(dailySchedule); // Set the tasks in state
+          console.log("Loaded tasks from schedule.json:", dailySchedule);
         }
         else
         {
@@ -47,9 +45,6 @@ const ScheduleGrid = () => {
       {
         console.error("Error loading tasks:", error);
       }
-    };
-
-    loadTasks();
   }, []);
 
 

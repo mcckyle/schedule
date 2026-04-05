@@ -1,7 +1,7 @@
-//Date: 11 February 2025
+//Date: 4 April 2026
 //Name: Kyle McColgan
-//Filename: App.js
-//Description: Main entry point for the React schedule site.
+//Filename: App.jx
+//Description: This file contains the entry point for the React schedule project.
 
 import React from 'react';
 import ScheduleGrid from './components/ScheduleGrid';

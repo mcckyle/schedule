@@ -1,4 +1,4 @@
-/* General styling for the schedule grid */
+/* Filename: ScheduleGrid.css */
 .schedule-grid {
   display: flex;
   flex-direction: column; /* Stack the schedule container vertically */
