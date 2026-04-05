@@ -1,63 +1,100 @@
 # Schedule
 
-This project provides a web-based schedule system, where users can view, add, and manage tasks in a weekly schedule grid. The tasks can be uploaded from a JSON file and persist even after a page reload using browser's `localStorage`.
+A lightweight, modern daily planning application built with React and
+Vite. The interface presents a clean weekly grid where tasks can be added and edited.
+
+The project focuses on simplicity and clarity while maintaining a modern user experience.
+
+## Overview
+
+The planner displays a structured schedule from Monday through Friday,
+covering hourly time slots from morning to evening. Each slot is
+interactive, allowing users to quickly assign tasks and organize their
+day with minimal friction.
+
+All task data is stored locally, enabling persistence across sessions
+without requiring a backend service.
 
 ## Features
 
-- **View Schedule**: A grid displaying the days of the week (Monday - Friday) and hourly time slots (8 AM - 10 PM).
-- **Add Tasks**: Click on any time slot to add a task to that hour.
-- **Upload Tasks**: Users can upload a JSON file containing tasks to populate the schedule.
-- **Persistence**: The schedule data is stored in `localStorage` and persists even after page reloads.
-- **Clear Tasks**: Users can clear all tasks from the schedule.
+View and interact with a responsive weekly schedule grid.
 
-## Technologies Used
+Add tasks by selecting any time slot through a focused modal interface.
 
-- **React**: The front-end is built using React to manage the user interface and state.
-- **LocalStorage**: Tasks are stored in the browser's `localStorage` to persist the schedule across page reloads.
+Upload task data from a JSON file to quickly populate the schedule.
 
-## How to Use
+Persist all changes using localStorage so data remains after reload.
 
-1. Clone the repository:
+Reset the schedule at any time with a single action.
+
+## Tech Stack
+
+React is used for component-based UI development.
+
+Vite provides a fast development server and optimized build process.
+
+Vitest and Testing Library support unit testing.
+
+LocalStorage is used for client-side persistence.
+
+## Getting Started
+
+Clone the repository:
    ```bash
-   git clone https://github.com/your_username/schedule
+   git clone https://github.com/mcckyle/schedule
    ```
 
-2. Install dependencies:
+Navigate into the project directory:
+   ```bash
+   cd schedule
+   ```
+
+Install dependencies:
    ```bash
    npm install
    ```
 
-3. Run the development server:
+Start the development server:
    ```bash
-   npm start
+   npm run dev
    ```
 
-4. Open the application in your browser (usually at `http://localhost:3000`).
+Open the app in your browser at:
 
-5. Use the UI to upload tasks, click on slots to add tasks, or clear the schedule as needed.
+http://localhost:5173/
 
-## Example JSON Format for Uploading Tasks
+## Data Format
 
-To upload tasks automatically, kindly create a JSON file with the following activity format:
+Tasks can be imported using a JSON file structured as key-value pairs,
+where each key represents a day and hour combination.
 
 ```json
 {
-  "Monday-8": "Meeting",
-  "Monday-9": "Work on Project",
-  "Tuesday-10": "Doctor's appointment"
+  "Monday-8": "Morning Routine",
+  "Monday-9": "Deep Work Session",
+  "Tuesday-10": "Team Meeting"
 }
 ```
 
-## Deploying to GitHub Pages
+## Deployment
 
-The project is automatically deployed to GitHub Pages via GitHub Actions. After pushing changes to the main branch, the application will be available at:
+The application is deployed automatically using GitHub Actions. Each
+push to the main branch triggers a build and publishes the latest
+version to GitHub Pages.
+
+The deployed app is available at:
 
 https://your_username.github.io/schedule
 
-## Contributing
+## Design Philosophy
 
-Feel free to fork this repository, make changes, and submit pull requests. Contributions are welcome!
+This project emphasizes a minimal and consistent design system. Styles
+are centralized through reusable tokens, reducing redundancy and
+avoiding conflicts across components.
+
+The interface is intentionally restrained, focusing on clarity and
+subtle interaction rather than visual noise.
 
 ## License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is released under the MIT License.
