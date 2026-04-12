@@ -24,10 +24,10 @@
 
 .app-main {
   flex: 1;
-  padding: 1.5rem;
-  max-width: 1200px;
   width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 1.5rem;
 }
 
 /* App Footer Styles. */
@@ -37,5 +37,5 @@
   color: var(--color-muted);
   text-align: center;
   padding: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }

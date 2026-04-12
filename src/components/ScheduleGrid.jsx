@@ -1,4 +1,4 @@
-//Date: 5 April 2026
+//Date: 11 April 2026
 //Name: Kyle McColgan
 //Filename: ScheduleGrid.jsx
 //Description: This file contains the React parent grid component for the weekly schedule project.
@@ -22,31 +22,22 @@ const ScheduleGrid = () => {
     }
     catch (error)
     {
-      console.error('Error parsing tasks from localStorage:', error);
-      return {};
+		return {};
     }
   });
   
-  //Load default schedule ONLY if no saved data exists.
+  //Initalize default schedule only once.
   useEffect(() => {
-	    if (Object.keys(tasks).length === 0)
-        {
-		  setTasks(dailySchedule); // Set the tasks in state
-          console.log("Loaded tasks from schedule.json:", dailySchedule);
-        }
-        else
-        {
-          console.error('Failed to fetch schedule.json');
-        }
+	if (Object.keys(tasks).length === 0)
+	{
+	  setTasks(dailySchedule); // Set the tasks in state
+	  //console.log("Loaded tasks from schedule.json:", dailySchedule);
+	}
   }, []);
-  
+
+  //Persist tasks.  
   useEffect(() => {
-    console.log('Updated tasks state:', tasks);  // Check the updated tasks.
-  }, [tasks]);
-  
-  // Save tasks to localStorage on update.
-  useEffect(() => {
-    console.log('Saving tasks to localStorage:', tasks);
+    //console.log('Saving tasks to localStorage:', tasks);
     localStorage.setItem('scheduleTasks', JSON.stringify(tasks));
   }, [tasks]);
 
@@ -84,15 +75,11 @@ const ScheduleGrid = () => {
 				  className="hour-slot"
 				  onClick={() => handleSlotClick(day, hour)}
 				>
-                  <div className="hour-header">{formatHour(hour)}</div>
-                  <div className="task-content">
-                    {task ? (
-                      <span className="task-description">{task}</span>
-                    ) : (
-                      <span className="no-task">No activity</span>
-                    )}
-                </div>
-              </button>
+                  <span className="hour-header">{formatHour(hour)}</span>
+                  <span className="task-content">
+                    {task || <span className="no-task">No activity</span>}
+                  </span>
+                </button>
               );
 			})}
           </section>
