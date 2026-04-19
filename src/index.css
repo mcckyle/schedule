@@ -1,4 +1,6 @@
 /* Filename: src/index.css */
+
+/* Design Tokens. */
 :root {
   --color-bg: #f8fafc;
   --color-surface: #ffffff;
@@ -21,12 +23,19 @@
     padding: 0;
 }
 
+html
+{
+	-webkit-text-size-adjust: 100%;
+	text-rendering: optimizeLegibility;
+}
+
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
 }
 
 :focus-visible {
@@ -38,7 +47,7 @@ button {
 	font: inherit;
 	border-radius: var(--radius);
 	border: 1px solid transparent;
-	padding: 0.55rem 1.1rem;
+	padding: 0.5rem 1rem;
 	cursor: pointer;
 	background: var(--color-primary);
 	color: white;

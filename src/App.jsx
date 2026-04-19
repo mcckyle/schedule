@@ -1,5 +1,5 @@
-//Date: 11 April 2026
 //Name: Kyle McColgan
+//Date: 18 April 2026
 //Filename: App.jx
 //Description: This file contains the entry point for the React schedule project.
 
@@ -13,7 +13,7 @@ const App = () => {
       <header className="app-header">
         <h1>My Daily Planner</h1>
       </header>
-      <main className="app-main">
+      <main className="app-main" role="main">
         <ScheduleGrid />
       </main>
       <footer className="app-footer">

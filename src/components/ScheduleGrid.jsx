@@ -1,5 +1,5 @@
-//Date: 11 April 2026
 //Name: Kyle McColgan
+//Date: 18 April 2026
 //Filename: ScheduleGrid.jsx
 //Description: This file contains the React parent grid component for the weekly schedule project.
 
@@ -18,29 +18,20 @@ const ScheduleGrid = () => {
     try
     {
       const savedTasks = localStorage.getItem('scheduleTasks');
-      return savedTasks ? JSON.parse(savedTasks) : {};
+      return savedTasks ? JSON.parse(savedTasks) : dailySchedule;
     }
     catch (error)
     {
-		return {};
+		return dailySchedule;
     }
   });
   
-  //Initalize default schedule only once.
-  useEffect(() => {
-	if (Object.keys(tasks).length === 0)
-	{
-	  setTasks(dailySchedule); // Set the tasks in state
-	  //console.log("Loaded tasks from schedule.json:", dailySchedule);
-	}
-  }, []);
-
   //Persist tasks.  
   useEffect(() => {
     //console.log('Saving tasks to localStorage:', tasks);
     localStorage.setItem('scheduleTasks', JSON.stringify(tasks));
   }, [tasks]);
-
+  
   const handleSlotClick = (day, hour) => {
     setSelectedSlot({ day, hour });
   };
@@ -59,21 +50,52 @@ const ScheduleGrid = () => {
     return `${formattedHour} ${isPM ? 'PM' : 'AM'}`;
   };
   
+  //Current time highlighting.
+  const now = new Date();
+  const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
+  const currentHour = now.getHours();
+  
+  const handleFileUpload = (file) => {
+	if (!file)
+	{
+	  return;
+	}
+	const reader = new FileReader();
+	reader.onload = (event) => {
+	  try
+	  {
+		const parsed = JSON.parse(event.target.result);
+		setTasks((prev) => ({ ...prev, ...parsed }));
+	  }
+	  catch
+	  {
+		  console.error('Invalid JSON file!');
+	  }
+	};
+	reader.readAsText(file);
+  };
+  
   return (
     <div className="schedule-grid" data-testid="schedule-grid">
-      <div className="schedule-container">
+      <div className="schedule-container" role="grid">
         {days.map((day) => (
-          <section className="day-column" key={day}>
+          <section
+		    className="day-column"
+			key={day}
+			aria-label={day}
+		  >
             <h3 className="day-header">{day}</h3>
             {hours.map((hour) => {
 			  const key = `${day}-${hour}`;
 			  const task = tasks[key];
+			  const isNow = day === (currentDay) && (hour) === currentHour;
 			  
 			  return (
 			    <button
 				  key={key}
-				  className="hour-slot"
+				  className={`hour-slot ${isNow ? 'current' : ''}`}
 				  onClick={() => handleSlotClick(day, hour)}
+				  aria-label={`${day} ${formatHour(hour)}`}
 				>
                   <span className="hour-header">{formatHour(hour)}</span>
                   <span className="task-content">
@@ -86,36 +108,23 @@ const ScheduleGrid = () => {
         ))}
       </div>
       {selectedSlot && (
-        <TaskInputModal
-          slot={selectedSlot}
-          onClose={() => setSelectedSlot(null)}
-          onSave={addTask}
-        />
+	    (() => {
+			const key = `${selectedSlot.day}-${selectedSlot.hour}`;
+			return (
+				<TaskInputModal
+				  slot={selectedSlot}
+				  onClose={() => setSelectedSlot(null)}
+				  onSave={addTask}
+				  initialValue={tasks[key] || ''}
+				/>
+			);
+		})()
       )}
       <div className="controls">
         <input
           type="file"
 		  accept=".json"
-		  onChange={(e) => {
-		    const file = e.target.files[0];
-			if (!file)
-			{
-			  return;
-			}
-			const reader = new FileReader();
-			reader.onload = (event) => {
-			  try
-			  {
-			    const parsed = JSON.parse(event.target.result);
-				setTasks((prev) => ({ ...prev, ...parsed }));
-			  }
-			  catch
-			  {
-				  console.error('Invalid JSON file');
-			  }
-			};
-			reader.readAsText(file);
-		  }}
+		  onChange={(e) => handleFileUpload(e.target.files[0])}
         />
         <button
           onClick={() => {

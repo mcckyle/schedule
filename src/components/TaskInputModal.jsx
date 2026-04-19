@@ -1,13 +1,13 @@
-//Date: 11 April 2026
 //Name: Kyle McColgan
+//Date: 18 April 2026
 //Filename: TaskInputModal.jsx
 //Description: This file contains the React task data entry component for the weekly schedule project.
 
 import React, { useState, useEffect, useRef } from 'react';
 import './TaskInputModal.css';
 
-const TaskInputModal = ({ slot, onClose, onSave }) => {
-  const [task, setTask] = useState('');
+const TaskInputModal = ({ slot, onClose, onSave, initialValue = '' }) => {
+  const [task, setTask] = useState(initialValue);
   const inputRef = useRef(null);
   
   //Autofocus input.
@@ -47,6 +47,8 @@ const TaskInputModal = ({ slot, onClose, onSave }) => {
     return `${formattedHour} ${isPM ? 'PM' : 'AM'}`;
   };
   
+  const isEditing = Boolean(initialValue);
+  
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div
@@ -57,7 +59,9 @@ const TaskInputModal = ({ slot, onClose, onSave }) => {
 		onClick={(e) => e.stopPropagation()} //Prevent closing when clicking inside the modal.
 	  >
 	    <header className="modal-header">
-          <h2 id="modal=title">Add Task</h2>
+          <h2 id="modal-title">
+		    {isEditing ? 'Edit Task' : 'Add Task'}
+		  </h2>
 		  <button
 		    className="modal-close"
 			onClick={onClose}
@@ -78,7 +82,9 @@ const TaskInputModal = ({ slot, onClose, onSave }) => {
               placeholder="Enter task..."
             />
 			<div className="modal-actions">
-			  <button type="submit">Save</button>
+			  <button type="submit">
+			    {isEditing ? 'Update' : 'Save'}
+			  </button>
 			  <button type="button" onClick={onClose} className="secondary">
 			    Cancel
 			  </button>
