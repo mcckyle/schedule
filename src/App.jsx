@@ -1,6 +1,6 @@
-//Name: Kyle McColgan
-//Date: 18 April 2026
 //Filename: App.jx
+//Name: Kyle McColgan
+//Date: 2 May 2026
 //Description: This file contains the entry point for the React schedule project.
 
 import React from 'react';
@@ -11,7 +11,12 @@ const App = () => {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>My Daily Planner</h1>
+	    <div className="app-header-content">
+          <h1>My Daily Planner</h1>
+		  <p className="app-subtitle">
+		    Organize your week with clarity and focus.
+		  </p>
+		</div>
       </header>
       <main className="app-main" role="main">
         <ScheduleGrid />

@@ -1,6 +1,6 @@
+//Filename: ScheduleGrid.jsx
 //Name: Kyle McColgan
 //Date: 2 May 2026
-//Filename: ScheduleGrid.jsx
 //Description: This file contains the parent grid component for the weekly schedule React project.
 
 import React, { useState, useEffect } from 'react';
@@ -13,6 +13,9 @@ const hours = Array.from({ length: 15 }, (_, index) => 8 + index); // 8 AM to 10
 const ScheduleGrid = () => {
   const [editingKey, setEditingKey] = useState(null);
   const [editingValue, setEditingValue] = useState('');
+  const [currentTime, setCurrentTime] = useState(new Date());
+  
+  
 
   const [tasks, setTasks] = useState(() => {
     try
@@ -28,8 +31,10 @@ const ScheduleGrid = () => {
   
   //Persist tasks.  
   useEffect(() => {
-    //console.log('Saving tasks to localStorage:', tasks);
-    localStorage.setItem('scheduleTasks', JSON.stringify(tasks));
+	if (Object.keys(tasks).length > 0)
+	{
+		localStorage.setItem('scheduleTasks', JSON.stringify(tasks));
+	}
   }, [tasks]);
   
   const handleSlotClick = (key, value) => {
@@ -65,9 +70,20 @@ const ScheduleGrid = () => {
   };
   
   //Current time highlighting.
-  const now = new Date();
-  const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
-  const currentHour = now.getHours();
+  useEffect(() => {
+	  const interval = setInterval(() => {
+		  setCurrentTime(new Date());
+	  }, 60000);
+	  
+	  return () => clearInterval(interval);
+  }, []);
+  
+  const currentDay = currentTime.toLocaleDateString(
+    'en-US',
+	{ weekday: 'long' }
+  );
+  
+  const currentHour = currentTime.getHours();
   
   const handleFileUpload = (file) => {
 	if (!file)
@@ -115,6 +131,7 @@ const ScheduleGrid = () => {
 				  {editingKey === key ? (
 				    <input
 					  className="task-input"
+					  aria-label={`Edit task for ${day} at ${formatHour(hour)}`}
 					  value={editingValue}
 					  autoFocus
 					  onChange={(e) => setEditingValue(e.target.value)}
