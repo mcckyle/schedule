@@ -1,10 +1,9 @@
 //Name: Kyle McColgan
-//Date: 18 April 2026
+//Date: 2 May 2026
 //Filename: ScheduleGrid.jsx
-//Description: This file contains the React parent grid component for the weekly schedule project.
+//Description: This file contains the parent grid component for the weekly schedule React project.
 
 import React, { useState, useEffect } from 'react';
-import TaskInputModal from './TaskInputModal';
 import dailySchedule from "../data/schedule.json";
 import './ScheduleGrid.css';
 
@@ -12,7 +11,8 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const hours = Array.from({ length: 15 }, (_, index) => 8 + index); // 8 AM to 10 PM.
 
 const ScheduleGrid = () => {
-  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [editingKey, setEditingKey] = useState(null);
+  const [editingValue, setEditingValue] = useState('');
 
   const [tasks, setTasks] = useState(() => {
     try
@@ -32,16 +32,30 @@ const ScheduleGrid = () => {
     localStorage.setItem('scheduleTasks', JSON.stringify(tasks));
   }, [tasks]);
   
-  const handleSlotClick = (day, hour) => {
-    setSelectedSlot({ day, hour });
+  const handleSlotClick = (key, value) => {
+    setEditingKey(key);
+	setEditingValue(value || '');
   };
 
-  const addTask = (task) => {
-    setTasks((prev) => ({
+  const saveTask = () => {
+	const trimmed = editingValue.trim();
+	
+	setTasks((prev) => {
+	  if (!trimmed)
+	  {
+		  const updated = { ...prev };
+		  delete updated[editingKey];
+		  return updated;
+	  }
+	  
+	  return {
       ...prev,
-      [`${selectedSlot.day}-${selectedSlot.hour}`]: task,
-    }));
-    setSelectedSlot(null);
+      [editingKey]: trimmed,
+    };
+  });
+  
+  setEditingKey(null);
+  setEditingValue('');
   };
 
   const formatHour = (hour) => {
@@ -94,32 +108,48 @@ const ScheduleGrid = () => {
 			    <button
 				  key={key}
 				  className={`hour-slot ${isNow ? 'current' : ''}`}
-				  onClick={() => handleSlotClick(day, hour)}
+				  onClick={() => handleSlotClick(key, task)}
 				  aria-label={`${day} ${formatHour(hour)}`}
 				>
                   <span className="hour-header">{formatHour(hour)}</span>
+				  {editingKey === key ? (
+				    <input
+					  className="task-input"
+					  value={editingValue}
+					  autoFocus
+					  onChange={(e) => setEditingValue(e.target.value)}
+					  onBlur={saveTask}
+					  onKeyDown={(e) => {
+						  if (e.key === 'Enter')
+						  {
+							  e.preventDefault();
+							  saveTask();
+						  }
+						  
+						  if(e.key === 'Escape')
+						  {
+							  setEditingKey(null);
+							  setEditingValue('');
+						  }
+					  }}
+					  onClick={(e) => e.stopPropagation()}
+					  placeholder="Enter task..."
+					/>
+				) : (
                   <span className="task-content">
-                    {task || <span className="no-task">No activity</span>}
+                    {task || (
+					  <span className="no-task">
+					    No activity
+					  </span>
+					)}
                   </span>
+				  )}
                 </button>
               );
 			})}
           </section>
         ))}
       </div>
-      {selectedSlot && (
-	    (() => {
-			const key = `${selectedSlot.day}-${selectedSlot.hour}`;
-			return (
-				<TaskInputModal
-				  slot={selectedSlot}
-				  onClose={() => setSelectedSlot(null)}
-				  onSave={addTask}
-				  initialValue={tasks[key] || ''}
-				/>
-			);
-		})()
-      )}
       <div className="controls">
         <input
           type="file"
