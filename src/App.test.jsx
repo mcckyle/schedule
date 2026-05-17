@@ -1,14 +1,14 @@
-//Date: 5 April 2026
+//Filename: App.test.jsx
+//Date: 16 May 2026
 //Name: Kyle McColgan
-//Filename: App.test.js
-//Description: This file contains the main entry component tests for the weekly schedule project.
+//Description: This file contains the main entry component tests for the daily planner React project.
 
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
 test('renders the app header', () => {
   render(<App />);
-  const headerElement = screen.getByText(/my daily planner/i);
+  const headerElement = screen.getByText(/weekly planning/i);
   expect(headerElement).toBeInTheDocument();
 });
 
@@ -21,6 +21,6 @@ test('renders the schedule grid component', () => {
 test('renders the footer with the correct year', () => {
   render(<App />);
   const year = new Date().getFullYear();
-  const footerElement = screen.getByText(`© ${year} My Schedule App`);
+  const footerElement = screen.getByText(`© ${year} Daily Planner`);
   expect(footerElement).toBeInTheDocument();
 });

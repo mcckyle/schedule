@@ -19,7 +19,7 @@ without requiring a backend service.
 
 View and interact with a responsive weekly schedule grid.
 
-Add tasks by selecting any time slot through a focused modal interface.
+Add tasks inline by selecting any time slot.
 
 Upload task data from a JSON file to quickly populate the schedule.
 
@@ -33,7 +33,7 @@ React is used for component-based UI development.
 
 Vite provides a fast development server and optimized build process.
 
-Vitest and Testing Library support unit testing.
+Vitest for unit testing.
 
 LocalStorage is used for client-side persistence.
 
@@ -84,7 +84,7 @@ version to GitHub Pages.
 
 The deployed app is available at:
 
-https://your_username.github.io/schedule
+https://mcckyle.github.io/schedule
 
 ## Design Philosophy
 
