@@ -9,7 +9,7 @@
 
 .schedule-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 1rem;
 }
 
@@ -21,18 +21,11 @@
   
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(18px);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
   box-shadow: var(--shadow-md);
 }
-
-.day-header {
-	position: sticky;
-	top: 0;
-	z-index: 2;
-	padding-bottom: 0.35rem;
-	background: linear-gradient(to bottom, rgba(248, 250, 252, 0.96), transparent);
-}
+.day-header { padding-bottom: 0.5rem; }
 .day-header h2 {
 	font-size: 0.78rem;
 	font-weight: 700;
@@ -53,9 +46,8 @@
   
   background: var(--color-surface-strong);
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
-  will-change: transform;
   
   transition: transform var(--transition),
               background var(--transition),
@@ -63,10 +55,10 @@
 			  box-shadow var(--transition);
 }
 .hour-slot:hover {
-	transform: translateY(-2px);
+	transform: translateY(-1px);
 	background: rgba(239, 246, 255, 0.96);
 	border-color: rgba(37, 99, 235, 0.14);
-	box-shadow: var(--shadow-md);
+	box-shadow: var(--shadow-sm);
 }
 .hour-slot.current { background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(59, 130, 246, 0.06)); border-color: rgba(37, 99, 235, 0.24); }
 
@@ -78,7 +70,7 @@
 }
 .task-content {
 	width: 100%;
-	font-size: 0.9rem;
+	font-size: 0.875rem;
 	line-height: 1.5;
 	color: var(--color-text);
 	overflow-wrap: anywhere;
@@ -106,9 +98,11 @@
 }
 .upload-control
 {
+	min-height: 44px;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.75rem;
+	padding: 0.85rem 1rem;
 	background: var(--color-surface);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-md);
@@ -119,6 +113,7 @@
 
 .upload-control input{ max-width: 220px; }
 .clear-button {
+	min-height: 44px;
 	padding: 0.85rem 1rem;
 	background: #ef4444;
 	border-radius: var(--radius-md);

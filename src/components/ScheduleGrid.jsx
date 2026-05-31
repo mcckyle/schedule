@@ -1,6 +1,6 @@
 //Filename: ScheduleGrid.jsx
 //Name: Kyle McColgan
-//Date: 16 May 2026
+//Date: 30 May 2026
 //Description: This file contains the parent grid component for the weekly schedule React project.
 
 import React, { useState, useEffect } from 'react';
@@ -33,11 +33,14 @@ const ScheduleGrid = () => {
   
   //Current time highlighting.
   useEffect(() => {
-	  const interval = setInterval(() => {
+	  const updateTime = () => {
 		  setCurrentTime(new Date());
-	  }, 60000);
+	  };
 	  
-	  return () => clearInterval(interval);
+	  updateTime();
+	  const intervalId = setInterval(updateTime, 60000);
+	  
+	  return () => clearInterval(intervalId);
   }, []);
   
   const currentDay = currentTime.toLocaleDateString(
@@ -99,7 +102,11 @@ const ScheduleGrid = () => {
 	  try
 	  {
 		const parsed = JSON.parse(event.target.result);
-		setTasks((previous) => ({ ...previous, ...parsed }));
+		
+		if ((parsed) && (typeof parsed === 'object') && (!Array.isArray(parsed)))
+		{
+			setTasks((previous) => ({ ...previous, ...parsed }));
+		}
 	  }
 	  catch
 	  {
@@ -111,7 +118,7 @@ const ScheduleGrid = () => {
   
   return (
     <section className="schedule-grid" data-testid="schedule-grid">
-      <div className="schedule-container" role="grid">
+      <div className="schedule-container" role="grid" aria-label="Weekly planner">
         {days.map((day) => (
           <section
 		    key={day}
@@ -128,6 +135,7 @@ const ScheduleGrid = () => {
 			  
 			  return (
 			    <button
+				  type="button"
 				  key={key}
 				  className={`hour-slot ${isNow ? 'current' : ''}`}
 				  onClick={() => handleSlotClick(key, task)}
@@ -181,6 +189,7 @@ const ScheduleGrid = () => {
 			/>
 		</label>
 		<button
+		  type="button"
 		  className="clear-button"
 		  onClick={clearAllTasks}
 		>
