@@ -1,6 +1,6 @@
 //Filename: ScheduleGrid.jsx
 //Name: Kyle McColgan
-//Date: 30 May 2026
+//Date: 6 June 2026
 //Description: This file contains the parent grid component for the weekly schedule React project.
 
 import React, { useState, useEffect } from 'react';
@@ -49,7 +49,6 @@ const ScheduleGrid = () => {
   );
   
   const currentHour = currentTime.getHours();
-  
   const formatHour = (hour) => {
     const isPM = hour >= 12;
     const formattedHour = hour % 12 || 12;
@@ -119,10 +118,12 @@ const ScheduleGrid = () => {
   return (
     <section className="schedule-grid" data-testid="schedule-grid">
       <div className="schedule-container" role="grid" aria-label="Weekly planner">
-        {days.map((day) => (
-          <section
+        {days.map((day) => {
+		  const isCurrentDay = currentDay === day;
+          return (
+		   <section
 		    key={day}
-			className="day-column"
+			className={`day-column ${isCurrentDay ? 'today-column' : ''}`}
 			aria-label={day}
 		  >
             <header className="day-header">
@@ -147,7 +148,7 @@ const ScheduleGrid = () => {
 					  className="task-input"
 					  autoFocus
 					  value={editingValue}
-					  placeholder="Add task..."
+					  placeholder="Enter activity"
 					  onChange={(event) => setEditingValue(event.target.value)}
 					  onBlur={saveTask}
 					  onClick={(event) => event.stopPropagation()}
@@ -177,7 +178,8 @@ const ScheduleGrid = () => {
               );
 			})}
           </section>
-        ))}
+		  );
+        })}
       </div>
       <div className="controls">
 	    <label className="upload-control">
