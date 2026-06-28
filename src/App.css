@@ -1,12 +1,12 @@
 /* Filename: src/App.css */
 
-/* App Container Styles. */
+/* Application Shell Styles. */
 .app {
-  position: relative;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   isolation: isolate;
+  position: relative;
 }
 .app-background {
 	position: fixed;
@@ -14,88 +14,69 @@
 	z-index: -1;
 	pointer-events: none;
 	background: radial-gradient(
-	  circle at 0% 0%,
-	  rgba(59, 130, 246, 0.10),
+	  circle at top left,
+	  rgba(59, 130, 246, 0.12),
 	  transparent 35%
 	),
 	radial-gradient(
-	  circle at 100% 0%,
-	  rgba(14, 165, 233, 0.08),
-	  transparent 30%
+	  circle at bottom right,
+	  rgba(99, 102, 241, 0.08),
+	  transparent 40%
 	),
-	radial-gradient(
-	  circle at 50% 100%,
-	  rgba(99, 102, 241, 0.05),
-	  transparent 45%
-	),
-	linear-gradient(
-	  180deg,
-	  #fcfcfe 0%,
-	  #f6f8fb 100%
-	);
+	linear-gradient(180deg, #fbfdff, #f5f7fb);
 }
 
 /* App Header Styles. */
 .app-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  background: rgba(255, 255, 255, 0.78);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  position: relative;
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
 }
 .app-header-content {
-	width: 100%;
-	max-width: var(--content-width);
-	margin: 0 auto;
-	padding: clamp(1.1rem, 2vw, 1.5rem) var(--page-padding);
+	width: min(100% - (var(--padge-padding) * 2), var(--content-width));
+	margin-inline: auto;
+	padding: clamp(2rem, 5vw, 4rem) 0 clamp(1.5rem, 4vw, 3rem);
 	text-align: center;
 }
 .app-eyebrow {
 	display: inline-flex;
-	align-items: center;
-	justify-content: center;
 	
-	padding: 0.45rem 0.85rem;
-	margin-bottom: 0.9rem;
+	padding: 0.45rem 0.9rem;
+	margin-bottom: 1rem;
 	border-radius: 999px;
 	
 	background: rgba(37, 99, 235, 0.08);
 	color: var(--color-primary);
 	
-	font-size: 0.72rem;
-	font-weight: 700;
-	letter-spacing: 0.14em;
+	font-size: 0.7rem;
+	font-weight: 750;
+	letter-spacing: 0.16em;
 	text-transform: uppercase;
 }
 .app-header h1 {
-  font-size: clamp(2.4rem, 4vw, 3.5rem);
-  font-weight: 800;
-  letter-spacing: -0.075em;
   color: var(--color-text);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 850;
+  letter-spacing: -0.085em;
 }
 .app-subtitle {
-	max-width: 36rem;
-	margin: 0.85rem auto 0;
-	font-size: clamp(0.95rem, 1.4vw, 1.05rem);
-	line-height: 1.7;
+	max-width: 38rem;
+	margin: 1rem auto 0;
 	color: var(--color-muted);
+	font-size: 1.05rem;
+	line-height: 1.7;
 }
 
 .app-main {
   flex: 1;
-  width: 100%;
-  max-width: var(--content-width);
-  margin: 0 auto;
-  padding: clamp(1.5rem, 2vw, 2.5rem) var(--page-padding) 3rem;
+  width: min(100% - (var(--padge-padding) * 2), var(--content-width));
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 3rem) 0;
 }
 
 /* App Footer Styles. */
 .app-footer {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.55), transparent);
   color: var(--color-muted);
   text-align: center;
   padding: 2rem 1rem;

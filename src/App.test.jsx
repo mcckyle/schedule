@@ -1,5 +1,5 @@
 //Filename: App.test.jsx
-//Date: 16 May 2026
+//Date: 28 June 2026
 //Name: Kyle McColgan
 //Description: This file contains the main entry component tests for the daily planner React project.
 
@@ -21,6 +21,6 @@ test('renders the schedule grid component', () => {
 test('renders the footer with the correct year', () => {
   render(<App />);
   const year = new Date().getFullYear();
-  const footerElement = screen.getByText(`© ${year} Daily Planner`);
+  const footerElement = screen.getByText(`· React + Vite · ${year}`);
   expect(footerElement).toBeInTheDocument();
 });
