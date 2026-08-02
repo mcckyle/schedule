@@ -1,0 +1,22 @@
+/* Filename: src/components/Footer/Footer.css */
+
+/* App Footer Styles. */
+.app-footer {
+  margin-top: auto;
+  padding: 2.5rem var(--page-padding);
+  border-top: 1px solid var(--color-border);
+  background: linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.55));
+  color: var(--color-muted);
+  backdrop-filter: blur(16px);
+  text-align: center;
+  font-size: 0.8rem;
+}
+.footer-link {
+	color: var(--color-text);
+	font-weight: 600;
+	text-decoration: none;
+	
+	transition: color var(--transition), opacity var(--transition);
+}
+.footer-link:hover { color: var(--color-primary); }
+.footer-muted { color: var(--color-muted); }

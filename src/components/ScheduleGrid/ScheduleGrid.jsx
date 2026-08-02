@@ -1,10 +1,10 @@
 //Filename: ScheduleGrid.jsx
 //Name: Kyle McColgan
-//Date: 6 June 2026
+//Date: 1 August 2026
 //Description: This file contains the parent grid component for the weekly schedule React project.
 
-import React, { useState, useEffect } from 'react';
-import dailySchedule from "../data/schedule.json";
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import dailySchedule from "../../data/schedule.json";
 import './ScheduleGrid.css';
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -43,17 +43,17 @@ const ScheduleGrid = () => {
 	  return () => clearInterval(intervalId);
   }, []);
   
-  const currentDay = currentTime.toLocaleDateString(
-    'en-US',
-	{ weekday: 'long' }
+  const currentDay = useMemo(
+    () => currentTime.toLocaleDateString('en-US', { weekday: 'long' }),
+	[currentTime]
   );
   
   const currentHour = currentTime.getHours();
-  const formatHour = (hour) => {
+  const formatHour = useCallback((hour) => {
     const isPM = hour >= 12;
     const formattedHour = hour % 12 || 12;
     return `${formattedHour} ${isPM ? 'PM' : 'AM'}`;
-  };
+  }, []);
   
   const handleSlotClick = (key, value) => {
     setEditingKey(key);
@@ -128,6 +128,9 @@ const ScheduleGrid = () => {
 		  >
             <header className="day-header">
 			  <h2>{day}</h2>
+			  {isCurrentDay && (
+			    <span className="today-badge">Today</span>
+			  )}
 			</header>
             {hours.map((hour) => {
 			  const key = `${day}-${hour}`;
