@@ -3,20 +3,22 @@
 /* App Footer Styles. */
 .app-footer {
   margin-top: auto;
-  padding: 2.5rem var(--page-padding);
+  padding: 1.75rem var(--page-padding);
   border-top: 1px solid var(--color-border);
-  background: linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.55));
+  background: rgba(255, 255, 255, 0.38);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   color: var(--color-muted);
-  backdrop-filter: blur(16px);
+  font-size: 0.75rem;
+  line-height: 1.4;
   text-align: center;
-  font-size: 0.8rem;
 }
+.footer-muted { color: var(--color-muted); }
 .footer-link {
-	color: var(--color-text);
+	color: var(--color-text-soft);
 	font-weight: 600;
 	text-decoration: none;
 	
 	transition: color var(--transition), opacity var(--transition);
 }
 .footer-link:hover { color: var(--color-primary); }
-.footer-muted { color: var(--color-muted); }

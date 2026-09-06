@@ -1,6 +1,6 @@
 //Filename: Footer.jsx
 //Name: Kyle McColgan
-//Date: 1 August 2026
+//Date: 5 September 2026
 //Description: This file contains the Footer component for the daily planner React project.
 
 import './Footer.css'; //Custom styling.
@@ -20,9 +20,8 @@ const Footer = () => {
 		  >
 			Kyle McColgan
 		  </a>
-		  {" "}
 		  <span className="footer-muted">
-		  · React + Vite · {year}
+		    {" "}· React + Vite · {year}
 		  </span>
       </footer>
   );

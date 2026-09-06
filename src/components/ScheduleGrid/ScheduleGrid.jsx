@@ -1,6 +1,6 @@
 //Filename: ScheduleGrid.jsx
 //Name: Kyle McColgan
-//Date: 1 August 2026
+//Date: 5 September 2026
 //Description: This file contains the parent grid component for the weekly schedule React project.
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
@@ -69,18 +69,18 @@ const ScheduleGrid = () => {
 	const trimmed = editingValue.trim();
 	
 	setTasks((previous) => {
+	  const updated = { ...previous };
+	  
 	  if (!trimmed)
 	  {
-		  const updated = { ...previous };
 		  delete updated[editingKey];
 		  return updated;
 	  }
 	  
-	  return {
-      ...previous,
-      [editingKey]: trimmed,
-    };
-  });
+	  updated[editingKey] = trimmed;
+	  
+	  return updated;
+    });
   
     resetEditor();
   };
@@ -88,6 +88,7 @@ const ScheduleGrid = () => {
   const clearAllTasks = () => {
 	  setTasks({});
 	  localStorage.removeItem('scheduleTasks');
+	  resetEditor();
   };
   
   const handleFileUpload = (file) => {
@@ -132,10 +133,45 @@ const ScheduleGrid = () => {
 			    <span className="today-badge">Today</span>
 			  )}
 			</header>
+			<div className="day-slots">
             {hours.map((hour) => {
 			  const key = `${day}-${hour}`;
 			  const task = tasks[key];
 			  const isNow = (currentDay === day) && (currentHour === hour);
+			  const isEditing = editingKey === key;
+			  
+			  if (isEditing)
+			  {
+				  return (
+				    <div className={`hour-slot editing ${isNow ? 'current' : ''}`} key={key}>
+					   <span className="hour-header">
+					     {formatHour(hour)}
+					    </span>
+						<input
+						  className="task-input"
+						  autoFocus
+						  value={editingValue}
+						  placeholder="Enter activity"
+						  aria-label={`${day} ${formatHour(hour)} activity`}
+						  onChange={(event) => setEditingValue(event.target.value)}
+						  onBlur={saveTask}
+						  onClick={(event) => event.stopPropagation()}
+						  onKeyDown={(event) => {
+							  if (event.key === 'Enter')
+							  {
+								  event.preventDefault();
+								  saveTask();
+							  }
+							  
+							  if(event.key === 'Escape')
+							  {
+								  resetEditor();
+							  }
+						  }}
+						/>
+					  </div>
+				  );
+			  }
 			  
 			  return (
 			    <button
@@ -143,32 +179,9 @@ const ScheduleGrid = () => {
 				  key={key}
 				  className={`hour-slot ${isNow ? 'current' : ''}`}
 				  onClick={() => handleSlotClick(key, task)}
-				  aria-label={`${day} ${formatHour(hour)}`}
+				  aria-label={`${day} ${formatHour(hour)}${task ? `: ${task}` : ''}`}
 				>
                   <span className="hour-header">{formatHour(hour)}</span>
-				  {editingKey === key ? (
-				    <input
-					  className="task-input"
-					  autoFocus
-					  value={editingValue}
-					  placeholder="Enter activity"
-					  onChange={(event) => setEditingValue(event.target.value)}
-					  onBlur={saveTask}
-					  onClick={(event) => event.stopPropagation()}
-					  onKeyDown={(event) => {
-						  if (event.key === 'Enter')
-						  {
-							  event.preventDefault();
-							  saveTask();
-						  }
-						  
-						  if(event.key === 'Escape')
-						  {
-							  resetEditor();
-						  }
-					  }}
-					/>
-				) : (
                   <span className="task-content">
                     {task || (
 					  <span className="no-task">
@@ -176,21 +189,24 @@ const ScheduleGrid = () => {
 					  </span>
 					)}
                   </span>
-				  )}
                 </button>
               );
 			})}
+			</div>
           </section>
 		  );
         })}
       </div>
-      <div className="controls">
+      <div className="controls" aria-label="Schedule controls">
 	    <label className="upload-control">
 		  <span>Import Schedule</span>
 			<input
 			  type="file"
-			  accept=".json"
-			  onChange={(event) => handleFileUpload(event.target.files[0])}
+			  accept=".json,application/json"
+			  onChange={(event) => {
+				  handleFileUpload(event.target.files[0]);
+				  event.target.value= '';
+			  }}
 			/>
 		</label>
 		<button

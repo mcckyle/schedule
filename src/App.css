@@ -2,11 +2,11 @@
 
 /* Application Shell Styles. */
 .app {
+  position: relative;
+  isolation: isolate;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  isolation: isolate;
-  position: relative;
 }
 .app-background {
 	position: fixed;
@@ -14,27 +14,23 @@
 	z-index: -1;
 	pointer-events: none;
 	background: radial-gradient(
-	  70rem 40rem at 0% 0%,
-	  rgba(59, 130, 246, 0.13),
-	  transparent 60%
+	  70rem 42rem at 8% -12%,
+	  rgba(59, 130, 246, 0.09),
+	  transparent 68%
 	),
 	radial-gradient(
-	  50rem 30rem at 100% 0%,
-	  rgba(14, 165, 233, 0.08),
-	  transparent 65%
+	  55rem 35rem at 92% 0%,
+	  rgba(14, 165, 233, 0.055),
+	  transparent 70%
 	),
-	conic-gradient(
-	  from 180deg at 50% -20%,
-	  rgba(255, 255, 255, 0.30),
-	  transparent 25%
-	),
-	linear-gradient(180deg, #fcfdff 0%, #f6f8fc 45%, #eef3fb);
+	linear-gradient(180deg, #fcfdff 0%, #f7f9fc 52%, #f1f5fa 100%);
 }
 .app-main {
   flex: 1;
-  padding: clamp(1.5rem, 4vw, 3rem) 0;
+  width: 100%;
+  padding-block: clamp(1.25rem, 3vw, 2.75rem);
 }
 
 @media (max-width: 768px) {
-	.app-main { padding-top: 1rem; }
+	.app-main { padding-block: 1rem 1.5rem; }
 }
