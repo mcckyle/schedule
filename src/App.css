@@ -4,9 +4,12 @@
 .app {
   position: relative;
   isolation: isolate;
-  min-height: 100dvh;
+  
   display: flex;
   flex-direction: column;
+  
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 .app-background {
 	position: fixed;
@@ -28,9 +31,10 @@
 .app-main {
   flex: 1;
   width: 100%;
-  padding-block: clamp(1.25rem, 3vw, 2.75rem);
+  min-width: 0;
+  padding-block: clamp(2rem, 3vw, 2.75rem);
 }
 
-@media (max-width: 768px) {
-	.app-main { padding-block: 1rem 1.5rem; }
+@media (max-width: 640px) {
+	.app-main { padding-block: 1.5rem 2rem; }
 }

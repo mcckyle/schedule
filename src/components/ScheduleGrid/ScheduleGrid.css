@@ -2,24 +2,29 @@
 
 /* ScheduleGrid Layout Styles. */
 .schedule-grid {
-  display: flex;
-  flex-direction: column; /* Stack the schedule container vertically */
-  gap: 1.5rem;
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
 }
 
 .schedule-container {
   display: grid;
-  grid-template-columns: repeat(5, minmax(240px, 1fr));
+  grid-template-columns: repeat(5, minmax(248px, 1fr));
   gap: 0.875rem;
   width: 100%;
+  min-width: 0;
   padding: 0.25rem;
   overflow-x: auto;
   overflow-y: hidden;
   
   scroll-padding-inline: 0.25rem;
-  scrollbar-gutter: stable;
-  overscroll-behavior-inline: contain;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.32) transparent;
 }
+.schedule-container::-webkit-scrollbar { height: 8px; }
+.schedule-container::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.32); border-radius: 999px; }
+.schedule-container::-webkit-scrollbar-track { background: transparent; }
 
 .day-column {
   position: relative;
@@ -38,7 +43,7 @@
   transition: border-color var(--transition), box-shadow var(--transition);
 }
 .day-column:hover { border-color: var(--color-border-strong); box-shadow: var(--shadow-lg); }
-.today-column { border-color: rgba(37, 99, 235, 0.20); }
+.today-column { border-color: var(--color-primary-border); }
 .today-column::before {
 	content: "";
 	position: absolute;
@@ -47,10 +52,12 @@
 	border-radius: 999px;
 	background: var(--color-primary);
 	opacity: 0.75;
+	pointer-events: none;
 }
 .day-header
 {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
 	gap: 0.60rem;
@@ -73,8 +80,8 @@
   align-items: center;
   padding: 0.30rem 0.55rem;
   
-  background: rgba(37, 99, 235, 0.07);
-  border: 1px solid rgba(37, 99, 235, 0.10);
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-primary-border);
   border-radius: 999px;
   color: var(--color-primary);
   
@@ -92,7 +99,7 @@
 }
 .hour-slot {
   width: 100%;
-  min-height: 92px;
+  min-height: 96px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -109,13 +116,13 @@
 }
 button.hour-slot:hover {
 	transform: translateY(-1px);
-	border-color: rgba(37, 99, 235, 0.15);
-	background: #ffffff;
+	border-color: var(--color-primary-border);
+	background: var(--color-surface-solid);
 	box-shadow: var(--shadow-sm);
 }
 button.hour-slot:focus-visible { position: relative; z-index: 1; }
 .hour-slot.current {
-	border-color: rgba(37, 99, 235, 0.28);
+	border-color: var(--color-primary-border);
 	background: linear-gradient(145deg, rgba(37, 99, 235, 0.09), rgba(255, 255, 255, 0.96) 70%);
 }
 .hour-slot.current .hour-header { color: var(--color-primary); }
@@ -130,16 +137,16 @@ button.hour-slot:focus-visible { position: relative; z-index: 1; }
 }
 .task-content {
 	width: 100%;
-	margin-top: 0.25rem;
+	margin-top: 0.20rem;
 	overflow-wrap: anywhere;
 	color: var(--color-text-soft);
 	font-size: 0.90rem;
 	font-weight: 500;
 	line-height: 1.45;
 }
-.no-task { color: var(--color-muted); opacity: 0.42; font-style: italic; transition: opacity var(--transition); }
-.hour-slot:hover .no-task { opacity: 0.62; }
-.hour-slot.editing { border-color: rgba(37, 99, 235, 0.28); background: #ffffff; box-shadow: var(--shadow-sm); }
+.no-task { color: var(--color-muted); opacity: 0.50; font-weight: 400; font-style: italic; transition: opacity var(--transition); }
+.hour-slot:hover .no-task { opacity: 0.75; }
+.hour-slot.editing { border-color: var(--color-primary-border); background: var(--color-surface-solid); box-shadow: var(--shadow-sm); }
 .task-input {
 	width: 100%;
 	min-width: 0;
@@ -152,14 +159,14 @@ button.hour-slot:focus-visible { position: relative; z-index: 1; }
 	font-weight: 500;
 	line-height: 1.45;
 }
-.task-input::placeholder { color: var(--color-muted); opacity: 0.55; }
+.task-input::placeholder { color: var(--color-muted); opacity: 0.70; }
 .controls {
   display: flex;     /* Flex container for better alignment */
   align-items: center;
   justify-content: center;       /* Center the controls */
   flex-wrap: wrap;
   gap: 0.625rem;
-  padding-top: 1.25rem;
+  padding-top: 1rem;
   border-top: 1px solid var(--color-border);
 }
 .upload-control, .clear-button {
@@ -172,6 +179,8 @@ button.hour-slot:focus-visible { position: relative; z-index: 1; }
 	font-size: 0.78rem;
 	font-weight: 600;
 	line-height: 1;
+	
+	transition: background-color var(--transition), border-color var(--transition), box-shadow var(--transition), color var(--transition);
 }
 .upload-control
 {
@@ -180,15 +189,14 @@ button.hour-slot:focus-visible { position: relative; z-index: 1; }
 	background: rgba(255, 255, 255, 0.70);
 	border: 1px solid var(--color-border);
 	cursor: pointer;
-	
-	transition: background-color var(--transition), border-color var(--transition), box-shadow var(--transition), color var(--transition);
 }
 .upload-control:hover {
 	border-color: var(--color-border-strong);
-	background: #ffffff;
+	background: var(--color-surface-solid);
 	color: var(--color-text);
 	box-shadow: var(--shadow-sm);
 }
+.upload-control:focus-within { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
 .upload-control input {
 	position: absolute;
 	width: 1px;
@@ -205,12 +213,9 @@ button.hour-slot:focus-visible { position: relative; z-index: 1; }
 }
 .clear-button:hover { background: #1f2937; box-shadow: var(--shadow-md); }
 
-@media (max-width: 900px) {
-	.schedule-container { grid-template-columns: repeat(5, 260px); justify-content: start; }
-}
 @media (max-width: 640px) {
-	.schedule-container { grid-template-columns: repeat(5, minmax(240px, 240px)); gap: 0.75rem; }
+	.schedule-container { grid-template-columns: repeat(5, minmax(232px, 232px)); gap: 0.75rem; }
 	.day-column { padding: 0.65rem; }
-	.hour-slot { min-height: 88px; padding: 0.75rem; }
-	.controls { padding-top: 1rem; }
+	.hour-slot { min-height: 92px; padding: 0.75rem; }
+	.controls { padding-top: 0.875rem; }
 }

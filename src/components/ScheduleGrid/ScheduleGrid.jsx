@@ -1,83 +1,132 @@
 //Filename: ScheduleGrid.jsx
 //Name: Kyle McColgan
-//Date: 5 September 2026
+//Date: 10 October 2026
 //Description: This file contains the parent grid component for the weekly schedule React project.
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import dailySchedule from "../../data/schedule.json";
 import './ScheduleGrid.css';
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const hours = Array.from({ length: 15 }, (_, index) => 8 + index); // 8 AM to 10 PM.
 
+const formatHour = (hour) => {
+	const isPM = hour >= 12;
+	const formattedHour = hour % 12 || 12;
+	return `${formattedHour} ${isPM ? 'PM' : 'AM'}`;
+};
+
+//Accept only valid task maps containing string values.
+const normalizeTaskMap = (value) => {
+	if ((value === null) || (typeof value !== 'object') || (Array.isArray(value)))
+	{
+		return null;
+	}
+	
+	return Object.fromEntries(Object.entries(value).filter(([, task]) => typeof task === 'string'));
+};
+
+//Preserve the existing default schedule when available.
+const getDefaultTasks = () => {
+	if (typeof dailySchedule === 'undefined')
+	{
+		return {};
+	}
+	
+	return normalizeTaskMap(dailySchedule) ?? {};
+};
+
+//Restore saved activities without allowing invalid storage to crash the app.
+const getInitialTasks = () => {
+	const fallback = getDefaultTasks();
+	
+	if (typeof window === 'undefined')
+	{
+		return fallback;
+	}
+	
+	try
+	{
+		const savedTasks = window.localStorage.getItem('scheduleTasks');
+		
+		if (savedTasks === null)
+		{
+			return fallback;
+		}
+		
+		return normalizeTaskMap(JSON.parse(savedTasks)) ?? fallback;
+	}
+	catch
+	{
+		return fallback;
+	}
+};
+
 const ScheduleGrid = () => {
   const [editingKey, setEditingKey] = useState(null);
   const [editingValue, setEditingValue] = useState('');
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [tasks, setTasks] = useState(() => {
-    try
-    {
-      const savedTasks = localStorage.getItem('scheduleTasks');
-      return savedTasks ? JSON.parse(savedTasks) : dailySchedule;
-    }
-    catch
-    {
-		return dailySchedule;
-    }
-  });
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+  const [tasks, setTasks] = useState(getInitialTasks);
+  const skipBlurSaveRef = useRef(false);
   
-  //Persist tasks.  
+  //Persist activities.  
   useEffect(() => {
-	  localStorage.setItem('scheduleTasks', JSON.stringify(tasks));
+	  try
+	  {
+		  window.localStorage.setItem('scheduleTasks', JSON.stringify(tasks));
+	  }
+	  catch
+	  {
+		  //Keep the planner usable when storage is unavailable.
+	  }
   }, [tasks]);
   
-  //Current time highlighting.
+  //Refresh the current time once per minute.
   useEffect(() => {
 	  const updateTime = () => {
 		  setCurrentTime(new Date());
 	  };
 	  
 	  updateTime();
-	  const intervalId = setInterval(updateTime, 60000);
+	  const intervalId = window.setInterval(updateTime, 60000);
 	  
-	  return () => clearInterval(intervalId);
+	  return () => window.clearInterval(intervalId);
   }, []);
   
-  const currentDay = useMemo(
-    () => currentTime.toLocaleDateString('en-US', { weekday: 'long' }),
-	[currentTime]
-  );
+  const currentDay = currentTime.toLocaleDateString('en-US', { weekday: 'long' });
   
   const currentHour = currentTime.getHours();
-  const formatHour = useCallback((hour) => {
-    const isPM = hour >= 12;
-    const formattedHour = hour % 12 || 12;
-    return `${formattedHour} ${isPM ? 'PM' : 'AM'}`;
-  }, []);
-  
-  const handleSlotClick = (key, value) => {
-    setEditingKey(key);
-	setEditingValue(value || '');
+  const resetEditor = () => {
+	  setEditingKey(null);
+	  setEditingValue('');
   };
   
-  const resetEditor = () => {
-    setEditingKey(null);
-	setEditingValue('');
+  const handleSlotClick = (key, value) => {
+	skipBlurSaveRef.current = false;
+    setEditingKey(key);
+	setEditingValue(value);
   };
   
   const saveTask = () => {
-	const trimmed = editingValue.trim();
+	if (editingKey === null)
+	{
+		return;
+	}
+	
+	const key = editingKey;
+	const trimmedValue = editingValue.trim();
 	
 	setTasks((previous) => {
 	  const updated = { ...previous };
 	  
-	  if (!trimmed)
+	  if (trimmedValue)
 	  {
-		  delete updated[editingKey];
-		  return updated;
+		  updated[key] = trimmedValue;
 	  }
-	  
-	  updated[editingKey] = trimmed;
+	  else
+	  {
+		  delete updated[key];
+	  }
 	  
 	  return updated;
     });
@@ -85,9 +134,27 @@ const ScheduleGrid = () => {
     resetEditor();
   };
   
+  const handleEditorBlur = () => {
+	  if (skipBlurSaveRef.current)
+	  {
+		  skipBlurSaveRef.current = false;
+		  return;
+	  }
+	  
+	  saveTask();
+  };
+  
+  const cancelEditing = (event) => {
+	  event.preventDefault();
+	  
+	  skipBlurSaveRef.current = true;
+	  event.currentTarget.blur();
+	  
+	  resetEditor();
+  };
+  
   const clearAllTasks = () => {
 	  setTasks({});
-	  localStorage.removeItem('scheduleTasks');
 	  resetEditor();
   };
   
@@ -98,37 +165,43 @@ const ScheduleGrid = () => {
 	}
 	
 	const reader = new FileReader();
-	reader.onload = (event) => {
+	reader.onload = () => {
 	  try
 	  {
-		const parsed = JSON.parse(event.target.result);
+		const parsed = normalizeTaskMap(JSON.parse(reader.result));
 		
-		if ((parsed) && (typeof parsed === 'object') && (!Array.isArray(parsed)))
+		if (parsed === null)
 		{
-			setTasks((previous) => ({ ...previous, ...parsed }));
+			throw new Error('The imported file must contain a JSON object!');
 		}
+		
+		setTasks((previous) => ({ ...previous, ...parsed }));
 	  }
-	  catch
+	  catch(error)
 	  {
-		  console.error('Invalid JSON file!');
+		  console.error('Unable to import schedule:', error);
 	  }
+	};
+	reader.onerror = () => {
+		console.error('Unable to read the selected schedule file.');
 	};
 	reader.readAsText(file);
   };
   
   return (
-    <section className="schedule-grid" data-testid="schedule-grid">
-      <div className="schedule-container" role="grid" aria-label="Weekly planner">
+    <section className="schedule-grid" data-testid="schedule-grid" aria-label="Weekly schedule">
+      <div className="schedule-container">
         {days.map((day) => {
 		  const isCurrentDay = currentDay === day;
+		  const headingId = `day-${day.toLowerCase()}`;
           return (
 		   <section
 		    key={day}
 			className={`day-column ${isCurrentDay ? 'today-column' : ''}`}
-			aria-label={day}
+			aria-label={headingId}
 		  >
             <header className="day-header">
-			  <h2>{day}</h2>
+			  <h2 id={headingId}>{day}</h2>
 			  {isCurrentDay && (
 			    <span className="today-badge">Today</span>
 			  )}
@@ -136,36 +209,36 @@ const ScheduleGrid = () => {
 			<div className="day-slots">
             {hours.map((hour) => {
 			  const key = `${day}-${hour}`;
-			  const task = tasks[key];
-			  const isNow = (currentDay === day) && (currentHour === hour);
+			  const task = tasks[key] || '';
+			  const isNow = isCurrentDay && (currentHour === hour);
 			  const isEditing = editingKey === key;
 			  
 			  if (isEditing)
 			  {
 				  return (
-				    <div className={`hour-slot editing ${isNow ? 'current' : ''}`} key={key}>
+				    <div key={key} className={`hour-slot editing ${isNow ? 'current' : ''}`}>
 					   <span className="hour-header">
 					     {formatHour(hour)}
 					    </span>
 						<input
 						  className="task-input"
+						  type="text"
 						  autoFocus
 						  value={editingValue}
-						  placeholder="Enter activity"
+						  placeholder="Add an activity"
 						  aria-label={`${day} ${formatHour(hour)} activity`}
 						  onChange={(event) => setEditingValue(event.target.value)}
-						  onBlur={saveTask}
-						  onClick={(event) => event.stopPropagation()}
+						  onBlur={handleEditorBlur}
 						  onKeyDown={(event) => {
 							  if (event.key === 'Enter')
 							  {
 								  event.preventDefault();
-								  saveTask();
+								  event.currentTarget.blur();
 							  }
 							  
 							  if(event.key === 'Escape')
 							  {
-								  resetEditor();
+								  cancelEditing(event);
 							  }
 						  }}
 						/>
@@ -175,8 +248,8 @@ const ScheduleGrid = () => {
 			  
 			  return (
 			    <button
-				  type="button"
 				  key={key}
+				  type="button"
 				  className={`hour-slot ${isNow ? 'current' : ''}`}
 				  onClick={() => handleSlotClick(key, task)}
 				  aria-label={`${day} ${formatHour(hour)}${task ? `: ${task}` : ''}`}
@@ -197,15 +270,16 @@ const ScheduleGrid = () => {
 		  );
         })}
       </div>
-      <div className="controls" aria-label="Schedule controls">
+      <div className="controls" role="group" aria-label="Schedule actions">
 	    <label className="upload-control">
 		  <span>Import Schedule</span>
 			<input
 			  type="file"
 			  accept=".json,application/json"
 			  onChange={(event) => {
-				  handleFileUpload(event.target.files[0]);
-				  event.target.value= '';
+				  const input = event.currentTarget;
+				  handleFileUpload(input.files?.[0]);
+				  input.value= '';
 			  }}
 			/>
 		</label>
