@@ -17,24 +17,24 @@
 	z-index: -1;
 	pointer-events: none;
 	background: radial-gradient(
-	  70rem 42rem at 8% -12%,
-	  rgba(59, 130, 246, 0.09),
-	  transparent 68%
-	),
-	radial-gradient(
-	  55rem 35rem at 92% 0%,
-	  rgba(14, 165, 233, 0.055),
+	  65rem 38rem at 8% -12%,
+	  rgba(59, 130, 246, 0.065),
 	  transparent 70%
 	),
-	linear-gradient(180deg, #fcfdff 0%, #f7f9fc 52%, #f1f5fa 100%);
+	radial-gradient(
+	  55rem 34rem at 94% 5%,
+	  rgba(14, 165, 233, 0.045),
+	  transparent 72%
+	),
+	linear-gradient(180deg, #fcfdff 0%, #f7f9fc 55%, #f2f5fa 100%);
 }
 .app-main {
   flex: 1;
   width: 100%;
   min-width: 0;
-  padding-block: clamp(2rem, 3vw, 2.75rem);
+  padding-block: clamp(1.75rem, 3vw, 2.75rem);
 }
 
 @media (max-width: 640px) {
-	.app-main { padding-block: 1.5rem 2rem; }
+	.app-main { padding-block: 1.25rem 1.75rem; }
 }

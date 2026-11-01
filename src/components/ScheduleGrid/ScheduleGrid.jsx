@@ -1,6 +1,6 @@
 //Filename: ScheduleGrid.jsx
 //Name: Kyle McColgan
-//Date: 10 October 2026
+//Date: 31 October 2026
 //Description: This file contains the parent grid component for the weekly schedule React project.
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -9,6 +9,7 @@ import './ScheduleGrid.css';
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const hours = Array.from({ length: 15 }, (_, index) => 8 + index); // 8 AM to 10 PM.
+const STORAGE_KEY = 'scheduleTasks';
 
 const formatHour = (hour) => {
 	const isPM = hour >= 12;
@@ -47,7 +48,7 @@ const getInitialTasks = () => {
 	
 	try
 	{
-		const savedTasks = window.localStorage.getItem('scheduleTasks');
+		const savedTasks = window.localStorage.getItem(STORAGE_KEY);
 		
 		if (savedTasks === null)
 		{
@@ -73,7 +74,7 @@ const ScheduleGrid = () => {
   useEffect(() => {
 	  try
 	  {
-		  window.localStorage.setItem('scheduleTasks', JSON.stringify(tasks));
+		  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 	  }
 	  catch
 	  {
@@ -198,7 +199,7 @@ const ScheduleGrid = () => {
 		   <section
 		    key={day}
 			className={`day-column ${isCurrentDay ? 'today-column' : ''}`}
-			aria-label={headingId}
+			aria-labelledby={headingId}
 		  >
             <header className="day-header">
 			  <h2 id={headingId}>{day}</h2>

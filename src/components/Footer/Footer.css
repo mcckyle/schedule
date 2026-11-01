@@ -3,13 +3,11 @@
 /* App Footer Styles. */
 .app-footer {
   margin-top: auto;
-  padding: 1.5rem var(--page-padding);
+  padding: 1.125rem var(--page-padding);
   border-top: 1px solid var(--color-border);
-  background: rgba(255, 255, 255, 0.38);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.42);
   color: var(--color-muted);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   line-height: 1.6;
   text-align: center;
 }
@@ -22,3 +20,4 @@
 	transition: color var(--transition);
 }
 .footer-link:hover { color: var(--color-primary); }
+.footer-link:focus-visible { border-radius: 2px; }
