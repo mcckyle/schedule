@@ -3,7 +3,8 @@
 A lightweight, modern daily planning application built with React and
 Vite. The interface presents a clean weekly grid where tasks can be added and edited.
 
-The project focuses on simplicity and clarity while maintaining a modern user experience.
+![Screenshot](./public/images/planner-screenshot-11272026.png)
+*A screenshot of the planner on a 1080p monitor.*
 
 ## Overview
 
