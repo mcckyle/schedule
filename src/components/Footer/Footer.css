@@ -11,13 +11,19 @@
   line-height: 1.6;
   text-align: center;
 }
-.footer-muted { color: var(--color-muted); }
-.footer-link {
-	color: var(--color-text-soft);
-	font-weight: 600;
-	text-decoration: none;
-	
-	transition: color var(--transition);
+.footer-muted {
+  color: var(--color-muted);
 }
-.footer-link:hover { color: var(--color-primary); }
-.footer-link:focus-visible { border-radius: 2px; }
+.footer-link {
+  color: var(--color-text-soft);
+  font-weight: 600;
+  text-decoration: none;
+
+  transition: color var(--transition);
+}
+.footer-link:hover {
+  color: var(--color-primary);
+}
+.footer-link:focus-visible {
+  border-radius: 2px;
+}
