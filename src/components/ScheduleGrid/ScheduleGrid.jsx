@@ -1,6 +1,6 @@
 //Filename: ScheduleGrid.jsx
 //Name: Kyle McColgan
-//Date: 31 October 2026
+//Date: 27 November 2026
 //Description: This file contains the parent grid component for the weekly schedule React project.
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -8,7 +8,7 @@ import dailySchedule from "../../data/schedule.json";
 import './ScheduleGrid.css';
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-const hours = Array.from({ length: 15 }, (_, index) => 8 + index); // 8 AM to 10 PM.
+const hours = Array.from({ length: 15 }, (_, index) => index + 8); // 8 AM to 10 PM.
 const STORAGE_KEY = 'scheduleTasks';
 
 const formatHour = (hour) => {
@@ -29,11 +29,6 @@ const normalizeTaskMap = (value) => {
 
 //Preserve the existing default schedule when available.
 const getDefaultTasks = () => {
-	if (typeof dailySchedule === 'undefined')
-	{
-		return {};
-	}
-	
 	return normalizeTaskMap(dailySchedule) ?? {};
 };
 
@@ -277,6 +272,7 @@ const ScheduleGrid = () => {
 			<input
 			  type="file"
 			  accept=".json,application/json"
+			  aria-label="Import schedule JSON file"
 			  onChange={(event) => {
 				  const input = event.currentTarget;
 				  handleFileUpload(input.files?.[0]);
